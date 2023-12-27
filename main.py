@@ -3,16 +3,19 @@ import pandas as pd
 import numpy as np
 import json
 import openai
+import os
+from dotenv import load_dotenv
+from supabase import create_client
 # from openai import OpenAI
 
-# client = OpenAI(api_key="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")
-openai.api_key = "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"
 
-from supabase import create_client
+load_dotenv()
 
-# Supabase credentials
-SUPABASE_URL = 'https://bbrcyfqrvwqbboudayre.supabase.co'
-SUPABASE_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImJicmN5ZnFydndxYmJvdWRheXJlIiwicm9sZSI6ImFub24iLCJpYXQiOjE2OTQ1Nzc0MzAsImV4cCI6MjAxMDE1MzQzMH0.SPNLpnm_cIHUdYMOKOK4d56VmgfNpuTComWRigMBwTg'
+# Set API keys from environment variables
+openai.api_key = os.getenv("OPENAI_API_KEY")
+# client = OpenAI(api_key="")
+SUPABASE_URL = os.getenv("SUPABASE_URL")
+SUPABASE_KEY = os.getenv("SUPABASE_KEY")
 
 # Connect to Supabase
 def create_supabase_client(url, key):
