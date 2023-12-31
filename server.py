@@ -2,7 +2,7 @@ from fastapi import FastAPI, HTTPException
 from fastapi.middleware.cors import CORSMiddleware
 from typing import List
 import pandas as pd
-from main import create_supabase_client, search_videos, SUPABASE_URL, SUPABASE_KEY
+from main import create_supabase_client, search_videos, get_videos_from_supabase, SUPABASE_URL, SUPABASE_KEY
 
 # Initialize FastAPI app
 app = FastAPI()
@@ -20,10 +20,13 @@ app.add_middleware(
 # Initialize your Supabase client outside of the endpoint
 client = create_supabase_client(SUPABASE_URL, SUPABASE_KEY)
 
+# Fetch all video data
+videos_df = get_videos_from_supabase(client)
+
 @app.get("/search/")
-async def search(query: str, top_k: int = 6):
+async def search(query: str, threshold: float = 0.77):
     try:
-        top_videos = search_videos(query, client, top_k)
+        top_videos = search_videos(query, videos_df, threshold)
         return top_videos.to_dict(orient='records')  # Convert DataFrame to a list of dicts
     except Exception as e:
         raise HTTPException(status_code=500, detail=str(e))

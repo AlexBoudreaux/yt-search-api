@@ -42,12 +42,9 @@ def query_to_embedding(query):
 def cosine_similarity(a, b):
     return np.dot(a, b) / (np.linalg.norm(a) * np.linalg.norm(b))
 
-def search_videos(query, client, top_k=6):
+def search_videos(query, videos_df, threshold=0.8):
     # Get embeddings for the query
     query_embedding = query_to_embedding(query)
-
-    # Fetch all video data
-    videos_df = get_videos_from_supabase(client)
 
     # Check and convert embeddings if necessary
     if isinstance(videos_df['embedding'].iloc[0], str):
@@ -59,11 +56,15 @@ def search_videos(query, client, top_k=6):
     # Calculate similarities
     videos_df['similarity'] = videos_df['embedding'].apply(lambda x: cosine_similarity(query_embedding, x))
 
-    # Sorting and selection
-    top_videos = videos_df.sort_values(by='similarity', ascending=False).head(top_k)
+    # Filter videos based on the similarity threshold
+    filtered_videos = videos_df[videos_df['similarity'] >= threshold]
+
+    # Sorting by similarity
+    sorted_videos = filtered_videos.sort_values(by='similarity', ascending=False)
 
     # Return the necessary columns
-    return top_videos[['video_name', 'creator', 'video_id']]  # Add any other needed columns here
+    return sorted_videos[['video_name', 'creator', 'video_id']]  # Add any other needed columns here
+
 
 
 
