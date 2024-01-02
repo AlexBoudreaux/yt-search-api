@@ -11,6 +11,41 @@ YT-Search is a dynamic web application that allows users to search and analyze Y
 - **Database**: Hosted on Supabase, provides structured storage and efficient retrieval of video data. Dashboard available at [Supabase Dashboard](https://supabase.com/dashboard/project/bbrcyfqrvwqbboudayre).
 - **API**: Hosted on Google Cloud Run, provides a scalable and secure backend service. API accessible at [Hosted API URL](https://yt-search-api-d6kibk2c6q-ue.a.run.app).
 
+## Redeploying the Service on Google Cloud Run
+
+To redeploy the service on Google Cloud Run, follow these steps:
+
+1. **Clone the Repository:**
+   ```bash
+   git clone [repository-url]
+   cd [repository-name]
+   ```
+
+2. **Init Cloud Run Project:**
+   ```bash
+   gcloud init
+   ```
+
+3. **Change the Project ID:**
+   ```bash
+   gcloud config set project <project-id>
+   ```
+
+4. **Deploy the Service:**
+   ```bash
+   gcloud run deploy --set-env-vars OPENAI_API_KEY=<key> --set-env-vars SUPABASE_URL=<url> --set-env-vars SUPABASE_KEY=<key> 
+   ```
+If prompted to enable the API, Reply y to enable.
+
+- When you are prompted for the source code location, press Enter to deploy the current folder.
+- When you are prompted for the service name, press Enter to accept the default name, for example `yt-search-api`.
+- If you are prompted to enable the Artifact Registry API or to allow creation of an Artifact Registry repository, respond by pressing `y`.
+- When you are prompted for region: select the region of your choice, for example `us-central1`.
+- You will be prompted to allow unauthenticated invocations: respond `y`.
+
+Then wait a few moments until the deployment is complete. On success, the command line displays the service URL.
+
+
 ## Running the Flask App Locally
 
 To run the Flask server locally, follow these steps:
@@ -52,6 +87,13 @@ The Flask server provides the following API endpoints:
 
 - `/search`: Search the database for videos based on query parameters.
 - `/`: Basic health check endpoint.
+
+### `Sample /search Request`
+
+```bash
+http://localhost:5000/search?query=lobster&threshold=0.77
+```   
+
 
 ## Contributing
 

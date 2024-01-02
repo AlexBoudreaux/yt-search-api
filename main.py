@@ -1,12 +1,13 @@
-import os
 from flask import Flask, request, jsonify
+from flask_cors import CORS
 from http import HTTPStatus
-
+import os
 from functions import create_supabase_client, search_videos, get_videos_from_supabase, SUPABASE_URL, SUPABASE_KEY
 
 app = Flask(__name__)
 
-# Initialize your Supabase client outside of the endpoint
+CORS(app)
+
 client = create_supabase_client(SUPABASE_URL, SUPABASE_KEY)
 
 # Fetch all video data
