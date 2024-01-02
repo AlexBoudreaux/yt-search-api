@@ -1,0 +1,62 @@
+
+# YT-Search-API Application
+
+## Overview
+
+YT-Search is a dynamic web application that allows users to search and analyze YouTube video data. The application is composed of a Flask server, a user-friendly UI, and a database hosted on Supabase.
+
+### Components
+- **Flask Server**: Powers the backend logic and interacts with the Supabase database.
+- **UI**: A sleek and responsive user interface, deployed at [yt-search-ui.vercel.app](https://yt-search-ui.vercel.app/).
+- **Database**: Hosted on Supabase, provides structured storage and efficient retrieval of video data. Dashboard available at [Supabase Dashboard](https://supabase.com/dashboard/project/bbrcyfqrvwqbboudayre).
+- **API**: Hosted on Google Cloud Run, provides a scalable and secure backend service. API accessible at [Hosted API URL](https://yt-search-api-d6kibk2c6q-ue.a.run.app).
+
+## Running the Flask App Locally
+
+To run the Flask server locally, follow these steps:
+
+1. **Clone the Repository:**
+   ```bash
+   git clone [repository-url]
+   cd [repository-name]
+   ```
+
+2. **Set Up a Virtual Environment:**
+   ```bash
+   python -m venv venv
+   source venv/bin/activate  # On Windows use `venv\Scriptsctivate`
+   ```
+
+3. **Install Dependencies:**
+   ```bash
+   pip install -r requirements.txt
+   ```
+
+4. **Set Environment Variables:**
+   Create a `.env` file in the root directory and populate it with the necessary environment variables:
+   ```
+   OPENAI_API_KEY=<your-openai-api-key>
+   SUPABASE_URL=<your-supabase-url>
+   SUPABASE_KEY=<your-supabase-key>
+   ```
+
+5. **Run the Flask App:**
+   ```bash
+   flask run
+   ```
+   Your local server should now be running on `http://localhost:5000`.
+
+## API Endpoints
+
+The Flask server provides the following API endpoints:
+
+- `/search`: Search the database for videos based on query parameters.
+- `/`: Basic health check endpoint.
+
+## Contributing
+
+We welcome contributions to the YT-Search project. Please read our contribution guidelines before submitting a pull request.
+
+## License
+
+YT-Search is released under the [MIT License](LICENSE).
