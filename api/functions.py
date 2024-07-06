@@ -1,13 +1,17 @@
-import pinecone
 import os
+from pinecone.grpc import PineconeGRPC as Pinecone
 from openai import OpenAI
 
 PINECONE_API_KEY = os.environ.get("PINECONE_API_KEY")
-PINECONE_ENV = os.environ.get("PINECONE_ENV")
 OPENAI_API_KEY = os.environ.get("OPENAI_API_KEY")
 
-pinecone.init(api_key=PINECONE_API_KEY, environment=PINECONE_ENV)
-index = pinecone.Index("recipes")
+# Initialize Pinecone
+pc = Pinecone(api_key=PINECONE_API_KEY)
+
+# Define the index name and initialize the Pinecone index
+index_name = "recipes"
+index = pc.Index(index_name)
+
 openai_client = OpenAI(api_key=OPENAI_API_KEY)
 
 def query_to_embedding(query):
