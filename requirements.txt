@@ -1,4 +1,4 @@
 fastapi==0.68.0
 uvicorn==0.15.0
-pinecone-client[grpc]==2.2.1
+"pinecone-client[grpc]"
 openai==0.27.0
