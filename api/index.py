@@ -1,6 +1,6 @@
 from fastapi import FastAPI, HTTPException
 from fastapi.middleware.cors import CORSMiddleware
-from functions import search_videos 
+from .functions import search_videos 
 import logging
 
 app = FastAPI()
