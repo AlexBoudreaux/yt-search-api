@@ -1,11 +1,5 @@
-Flask==3.0.0
-flask-cors
-gunicorn==20.1.0
-Werkzeug==3.0.1
-numpy
-openai==0.28.0
-pandas
-Pillow
+fastapi
+uvicorn
+pinecone-client
+openai
 python-dotenv
-Requests
-supabase
