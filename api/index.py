@@ -19,7 +19,7 @@ app.add_middleware(
 
 @app.get("/")
 async def root():
-    return {"message": "Hello, World"}
+    return {"Health": "OK"}
 
 @app.get("/search")
 async def search(query: str, top_k: int = 30, namespace: str = "All"):
