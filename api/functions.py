@@ -82,24 +82,28 @@ def remove_video(video_id):
         if index is None:
             return {"error": "Pinecone index not initialized"}
 
-        # Query the index to find the vector with the given video_id in metadata
-        query_response = index.query(
-            vector=[0] * 1536,  # Dummy vector, we're only interested in metadata
-            filter={"video_id": {"$eq": video_id}},
-            top_k=1,
-            include_metadata=True
-        )
+        # Get all namespace names
+        namespaces = index.describe_index_stats().namespaces.keys()
 
-        if not query_response.matches:
-            return {"error": f"No video found with ID {video_id}"}
+        deleted_count = 0
+        for namespace in namespaces:
+            # Create the potential object_id for this namespace
+            object_id = f"{video_id}_{namespace}"
 
-        # Get the Pinecone vector ID
-        vector_id = query_response.matches[0].id
+            try:
+                # Attempt to delete the vector by its object_id in this namespace
+                index.delete(ids=[object_id], namespace=namespace)
+                deleted_count += 1
+                logger.info(f"Video with ID {video_id} removed from namespace {namespace}")
+            except Exception as e:
+                # If deletion fails, it likely means the video wasn't in this namespace
+                logger.info(f"Video with ID {video_id} not found in namespace {namespace}")
 
-        # Delete the vector by its Pinecone ID
-        index.delete(ids=[vector_id])
-        logger.info(f"Video with ID {video_id} removed successfully")
-        return {"success": True}
+        if deleted_count == 0:
+            return {"error": f"No video found with ID {video_id} in any namespace"}
+
+        logger.info(f"Video with ID {video_id} removed successfully from {deleted_count} namespaces")
+        return {"success": True, "namespaces_removed": deleted_count}
     except Exception as e:
         logger.error(f"Error in remove_video: {str(e)}")
         return {"error": str(e)}
