@@ -1,6 +1,6 @@
 from fastapi import FastAPI, HTTPException
 from fastapi.middleware.cors import CORSMiddleware
-from .functions import search_videos 
+from .functions import search_videos, remove_video
 import logging
 
 app = FastAPI()
@@ -34,4 +34,16 @@ async def search(query: str, top_k: int = 30, namespace: str = "All"):
         return results
     except Exception as e:
         logger.error(f"Unexpected error in search: {str(e)}")
+        raise HTTPException(status_code=500, detail=str(e))
+
+@app.delete("/remove_video/{video_id}")
+async def remove_video_endpoint(video_id: str):
+    try:
+        result = remove_video(video_id)
+        if isinstance(result, dict) and "error" in result:
+            logger.error(f"Error in remove_video: {result['error']}")
+            raise HTTPException(status_code=500, detail=result['error'])
+        return {"message": f"Video with ID {video_id} removed successfully"}
+    except Exception as e:
+        logger.error(f"Unexpected error in remove_video: {str(e)}")
         raise HTTPException(status_code=500, detail=str(e))

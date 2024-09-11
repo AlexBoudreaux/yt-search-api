@@ -59,6 +59,7 @@ def search_videos(query, top_k=30, namespace="All"):
         )
         return [
             {
+                "object_id": match.id,
                 "video_name": match.metadata.get("title"),
                 "creator": match.metadata.get("creator"),
                 "video_id": match.metadata.get("video_id"),
@@ -74,4 +75,31 @@ def search_videos(query, top_k=30, namespace="All"):
         ]
     except Exception as e:
         logger.error(f"Error in search_videos: {str(e)}")
+        return {"error": str(e)}
+
+def remove_video(video_id):
+    try:
+        if index is None:
+            return {"error": "Pinecone index not initialized"}
+
+        # Query the index to find the vector with the given video_id in metadata
+        query_response = index.query(
+            vector=[0] * 1536,  # Dummy vector, we're only interested in metadata
+            filter={"video_id": {"$eq": video_id}},
+            top_k=1,
+            include_metadata=True
+        )
+
+        if not query_response.matches:
+            return {"error": f"No video found with ID {video_id}"}
+
+        # Get the Pinecone vector ID
+        vector_id = query_response.matches[0].id
+
+        # Delete the vector by its Pinecone ID
+        index.delete(ids=[vector_id])
+        logger.info(f"Video with ID {video_id} removed successfully")
+        return {"success": True}
+    except Exception as e:
+        logger.error(f"Error in remove_video: {str(e)}")
         return {"error": str(e)}
